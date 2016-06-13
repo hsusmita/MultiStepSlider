@@ -14,6 +14,8 @@
 		4E3D6B711C43C2310002DE23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4E3D6B6F1C43C2310002DE23 /* LaunchScreen.storyboard */; };
 		4E3D6B7C1C43C2310002DE23 /* MultiStepSliderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D6B7B1C43C2310002DE23 /* MultiStepSliderTests.swift */; };
 		4E3D6B871C43C2310002DE23 /* MultiStepSliderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D6B861C43C2310002DE23 /* MultiStepSliderUITests.swift */; };
+		4E3D6B971C43C4CC0002DE23 /* MultiStepRangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D6B961C43C4CC0002DE23 /* MultiStepRangeSlider.swift */; };
+		4E3D6B9A1C43C5EF0002DE23 /* Array+Sorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D6B991C43C5EF0002DE23 /* Array+Sorting.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		4E3D6B821C43C2310002DE23 /* MultiStepSliderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultiStepSliderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E3D6B861C43C2310002DE23 /* MultiStepSliderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiStepSliderUITests.swift; sourceTree = "<group>"; };
 		4E3D6B881C43C2310002DE23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4E3D6B961C43C4CC0002DE23 /* MultiStepRangeSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultiStepRangeSlider.swift; path = Source/MultiStepRangeSlider.swift; sourceTree = "<group>"; };
+		4E3D6B991C43C5EF0002DE23 /* Array+Sorting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+Sorting.swift"; path = "Source/Array+Sorting.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +101,7 @@
 		4E3D6B651C43C2310002DE23 /* MultiStepSlider */ = {
 			isa = PBXGroup;
 			children = (
+				4E3D6B981C43C4D10002DE23 /* Source */,
 				4E3D6B661C43C2310002DE23 /* AppDelegate.swift */,
 				4E3D6B681C43C2310002DE23 /* ViewController.swift */,
 				4E3D6B6A1C43C2310002DE23 /* Main.storyboard */,
@@ -123,6 +128,15 @@
 				4E3D6B881C43C2310002DE23 /* Info.plist */,
 			);
 			path = MultiStepSliderUITests;
+			sourceTree = "<group>";
+		};
+		4E3D6B981C43C4D10002DE23 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				4E3D6B991C43C5EF0002DE23 /* Array+Sorting.swift */,
+				4E3D6B961C43C4CC0002DE23 /* MultiStepRangeSlider.swift */,
+			);
+			name = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,6 +272,8 @@
 			files = (
 				4E3D6B691C43C2310002DE23 /* ViewController.swift in Sources */,
 				4E3D6B671C43C2310002DE23 /* AppDelegate.swift in Sources */,
+				4E3D6B9A1C43C5EF0002DE23 /* Array+Sorting.swift in Sources */,
+				4E3D6B971C43C4CC0002DE23 /* MultiStepRangeSlider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,6 +500,7 @@
 				4E3D6B8D1C43C2310002DE23 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4E3D6B8E1C43C2310002DE23 /* Build configuration list for PBXNativeTarget "MultiStepSliderTests" */ = {
 			isa = XCConfigurationList;
@@ -492,6 +509,7 @@
 				4E3D6B901C43C2310002DE23 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4E3D6B911C43C2310002DE23 /* Build configuration list for PBXNativeTarget "MultiStepSliderUITests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +518,7 @@
 				4E3D6B931C43C2310002DE23 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
