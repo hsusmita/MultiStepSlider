@@ -190,8 +190,13 @@ public class MultiStepRangeSlider: UIControl {
 
 	@IBInspectable var shadowEnabled: Bool = true {
 		didSet {
-			addShadow(lowerThumbLayer)
-			addShadow(upperThumbLayer)
+			if shadowEnabled {
+				addShadow(lowerThumbLayer)
+				addShadow(upperThumbLayer)
+			} else {
+				removeShadow(lowerThumbLayer)
+				removeShadow(upperThumbLayer)
+			}
 		}
 	}
 
@@ -385,6 +390,10 @@ public class MultiStepRangeSlider: UIControl {
 		layer.shadowOpacity = 0.3
 		layer.shadowRadius = 2
 		layer.shadowPath = UIBezierPath(roundedRect: layer.bounds.insetBy(dx: 1, dy: 2), cornerRadius: layer.bounds.height/2).CGPath
+	}
+
+	private func removeShadow(layer: CALayer) {
+		layer.shadowOpacity = 0.0
 	}
 
 	private func updateUpperValue(offset: CGFloat) {
