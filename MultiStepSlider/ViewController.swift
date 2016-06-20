@@ -20,13 +20,14 @@ class ViewController: UIViewController {
 		let intervals = [Interval(min: 50000, max: 100000, stepValue: 10000),
 						Interval(min: 100000, max: 1000000, stepValue: 100000),
 						Interval(min: 1000000, max: 3000000, stepValue: 500000)]
-		slider.intervals = intervals
-		numberFomatter.numberStyle = .CurrencyStyle
+		slider.configureSlider(intervals: intervals, preSelectedRange: nil)
+		minimumLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.lower)) as String
+		maximimLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.upper)) as String
 	}
 
 	@IBAction func handleSliderChange(sender: AnyObject) {
-		minimumLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValues.lower)) as String
-		maximimLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValues.upper)) as String
+		minimumLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.lower)) as String
+		maximimLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.upper)) as String
 		print("lower = \(slider.continuousCurrentValues.lower) higher = \(slider.continuousCurrentValues.upper)")
 	}
 }

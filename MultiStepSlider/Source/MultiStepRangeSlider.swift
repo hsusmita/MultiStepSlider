@@ -14,7 +14,7 @@ struct Path {
 	var length: CGFloat = 0
 }
 
-struct Interval {
+public struct Interval {
 	var min: Float = 0.0
 	var max: Float = 1.0
 	var stepValue: Float = 1.0
@@ -34,7 +34,7 @@ struct Interval {
 	}
 }
 
-struct RangeValue {
+public struct RangeValue {
 	var lower: Float = 0.0
 	var upper: Float = 0.0
 }
@@ -62,7 +62,6 @@ class RangeSliderTrackLayer: CALayer {
 		CGContextFillRect(ctx, rect)
 	}
 }
-
 
 class RangeSliderThumbLayer: CALayer {
 	var highlighted: Bool = false {
@@ -101,39 +100,14 @@ class RangeSliderThumbLayer: CALayer {
 
 @IBDesignable
 public class MultiStepRangeSlider: UIControl {
-	@IBInspectable var minimumValue: Float = 0.0 {
-		willSet(newValue) {
-			assert(newValue < maximumValue, "RangeSlider: minimumValue should be lower than maximumValue")
-		}
-		didSet {
-			updateLayerFrames()
-		}
-	}
 
-	@IBInspectable var maximumValue: Float = 1.0 {
-		willSet(newValue) {
-			assert(newValue > minimumValue, "RangeSlider: maximumValue should be greater than minimumValue")
-		}
+	@IBInspectable var trackLayerHeight: CGFloat = 1.0 {
 		didSet {
-			updateLayerFrames()
-		}
-	}
-
-	@IBInspectable var lowerValue: Float = 0.2 {
-		didSet {
-			if lowerValue < minimumValue {
-				lowerValue = minimumValue
-			}
-				updateLayerFrames()
-		}
-	}
-
-	@IBInspectable var upperValue: Float = 0.8 {
-		didSet {
-			if upperValue > maximumValue {
-				upperValue = maximumValue
-			}
-				updateLayerFrames()
+			var trackFrame = trackLayer.frame
+			trackFrame.origin.y = (bounds.size.height - trackLayerHeight)/2
+			trackFrame.size.height = trackLayerHeight
+			trackLayer.frame = trackFrame
+			trackLayer.setNeedsDisplay()
 		}
 	}
 
@@ -151,22 +125,18 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
+	@IBInspectable var thumbSize: CGSize = CGSize(width: 10.0, height: 10.0) {
+		didSet {
+			updateLayerFrames()
+		}
+	}
+
 	@IBInspectable var thumbTintColor: UIColor = UIColor.whiteColor() {
 		didSet {
 			lowerThumbLayer.tintColor = thumbTintColor
 			upperThumbLayer.tintColor = thumbTintColor
 			lowerThumbLayer.setNeedsDisplay()
 			upperThumbLayer.setNeedsDisplay()
-		}
-	}
-
-	@IBInspectable var trackLayerHeight: CGFloat = 1.0 {
-		didSet {
-			var trackFrame = trackLayer.frame
-			trackFrame.origin.y = (bounds.size.height - trackLayerHeight)/2
-			trackFrame.size.height = trackLayerHeight
-			trackLayer.frame = trackFrame
-			trackLayer.setNeedsDisplay()
 		}
 	}
 
@@ -200,65 +170,47 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
-	@IBInspectable var thumbSize: CGSize = CGSize(width: 10.0, height: 10.0) {
+	var discreteCurrentValue: RangeValue = RangeValue(lower: 0, upper: 1) {
 		didSet {
 			updateLayerFrames()
 		}
-	}
-
-	var trackFrame: CGRect = CGRect.zero {
-		didSet {
-			if CGRectEqualToRect(oldValue, trackFrame) {
-				return
-			}
-			trackLayer.frame = trackFrame
-			lowerCenter = positionForNodeValue(discreteLowerValue) ?? CGRectGetMinX(trackFrame)
-			upperCenter = positionForNodeValue(discreteUpperValue) ?? CGRectGetMaxX(trackFrame)
-			updateLayerFrames()
-		}
-	}
-
-	var intervals = [Interval]() {
-		didSet {
-			updateNodesList()
-			updateLayerFrames()
-			if nodesList.count > 0 {
-				lowerValue = Float(nodesList[0])
-				maximumValue = Float(nodesList[nodesList.count-1])
-				upperValue = maximumValue
-				minimumValue = lowerValue
-				discreteLowerValue = Float(nodesList[0])
-				discreteUpperValue = Float(nodesList[nodesList.count-1])
-			}
-			sendActionsForControlEvents(.ValueChanged)
-		}
-	}
-
-	var discreteCurrentValues: RangeValue {
-		return RangeValue(lower: discreteLowerValue, upper: discreteUpperValue)
 	}
 	var continuousCurrentValues: RangeValue {
 		return RangeValue(lower: lowerValue, upper: upperValue)
 	}
 
-	private var previouslocation = CGPoint()
+	private var previousLocation = CGPoint()
 	private let trackLayer = RangeSliderTrackLayer()
 	private let lowerThumbLayer = RangeSliderThumbLayer()
 	private let upperThumbLayer = RangeSliderThumbLayer()
+	private var intervals: [Interval] = []
+	private var preSelectedRange: RangeValue?
 	private var nodesList = [Float]()
+	private var lowerValue: Float = 0.0 {
+		didSet {
+			updateLayerFrames()
+		}
+	}
+
+	private var upperValue: Float = 1.0 {
+		didSet {
+			updateLayerFrames()
+		}
+	}
+
+	private var trackFrame: CGRect = CGRect.zero {
+		didSet {
+			if CGRectEqualToRect(oldValue, trackFrame) {
+				return
+			}
+			trackLayer.frame = trackFrame
+			lowerCenter = positionForNodeValue(discreteCurrentValue.lower) ?? CGRectGetMinX(trackFrame)
+			upperCenter = positionForNodeValue(discreteCurrentValue.upper) ?? CGRectGetMaxX(trackFrame)
+			updateLayerFrames()
+		}
+	}
 	private var lowerCenter: CGFloat = 0.0
 	private var upperCenter: CGFloat = 0.0
-
-	private var discreteLowerValue: Float = 0.0 {
-		didSet {
-			updateLayerFrames()
-		}
-	}
-	private var discreteUpperValue: Float = 0.0 {
-		didSet {
-			updateLayerFrames()
-		}
-	}
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -270,13 +222,23 @@ public class MultiStepRangeSlider: UIControl {
 		initializeLayers()
 	}
 
-	public func setupRange(lower:Float , upper: Float) {
-		discreteLowerValue = lower
-		discreteUpperValue = upper
-		trackLayer.frame = CGRectMake(thumbSize.width/2, (bounds.size.height - trackLayerHeight)/2,
-		bounds.size.width - thumbSize.width, trackLayerHeight)
-		lowerCenter = positionForNodeValue(discreteLowerValue) ?? CGRectGetMinX(trackLayer.frame)
-		upperCenter = positionForNodeValue(discreteUpperValue) ?? CGRectGetMaxX(trackLayer.frame)
+	public func configureSlider(intervals intervals: [Interval], preSelectedRange: RangeValue?) {
+		self.intervals = intervals
+		self.preSelectedRange = preSelectedRange
+		updateNodesList()
+		if nodesList.count > 0 {
+			if let rangeValue = preSelectedRange {
+				guard let _ = positionForNodeValue(rangeValue.lower), _ = positionForNodeValue(rangeValue.upper) else {
+					print("Range contains invalid node")
+					return
+				}
+				discreteCurrentValue = rangeValue
+			} else {
+				discreteCurrentValue = RangeValue(lower: Float(nodesList[0]), upper: Float(nodesList[nodesList.count-1]))
+			}
+			lowerCenter = positionForNodeValue(discreteCurrentValue.lower) ?? CGRectGetMinX(trackFrame)
+			upperCenter = positionForNodeValue(discreteCurrentValue.upper) ?? CGRectGetMaxX(trackFrame)
+		}
 		updateLayerFrames()
 	}
 
@@ -359,7 +321,7 @@ public class MultiStepRangeSlider: UIControl {
 			let valueDifference = nodesList[nextNode] - nodesList[nodeNumber]
 			let lower = CGFloat(nodeNumber) * scale
 			let value = Float(scaledPosition - lower) * valueDifference / Float(scale)
-			return nodesList[nodeNumber] - value
+			return nodesList[nodeNumber] + value
 		} else {
 			return nil
 		}
@@ -398,7 +360,7 @@ public class MultiStepRangeSlider: UIControl {
 		upperCenter = boundValue(upperCenter + offset, toLowerValue: CGRectGetMidX(lowerThumbLayer.frame) + thumbSize.width,
 		                         upperValue: CGRectGetMaxX(trackLayer.frame))
 		if let nodeValue = nodeValueForPosition(upperCenter) {
-			discreteUpperValue = nodeValue
+			discreteCurrentValue.upper = nodeValue
 		}
 		if let actualValue = actualValueForPosition(upperCenter) {
 			upperValue = actualValue
@@ -409,7 +371,7 @@ public class MultiStepRangeSlider: UIControl {
 		lowerCenter = boundValue(lowerCenter + offset, toLowerValue: CGRectGetMinX(trackLayer.frame),
 		                         upperValue:  CGRectGetMidX(upperThumbLayer.frame) - thumbSize.width)
 		if let nodeValue = nodeValueForPosition(lowerCenter) {
-			discreteLowerValue = nodeValue
+			discreteCurrentValue.lower = nodeValue
 		}
 		if let actualValue = actualValueForPosition(lowerCenter) {
 			lowerValue = actualValue
@@ -423,11 +385,10 @@ public class MultiStepRangeSlider: UIControl {
 	// MARK: - Touches
 
 	public override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-		previouslocation = touch.locationInView(self)
-		// Hit test the thumb layers
-		if lowerThumbLayer.frame.contains(previouslocation) {
+		previousLocation = touch.locationInView(self)
+		if lowerThumbLayer.frame.contains(previousLocation) {
 			lowerThumbLayer.highlighted = true
-		} else if upperThumbLayer.frame.contains(previouslocation) {
+		} else if upperThumbLayer.frame.contains(previousLocation) {
 			upperThumbLayer.highlighted = true
 		}
 		return lowerThumbLayer.highlighted || upperThumbLayer.highlighted
@@ -435,8 +396,8 @@ public class MultiStepRangeSlider: UIControl {
 
 	public override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
 		let location = touch.locationInView(self)
-		let deltaLocation = location.x - previouslocation.x
-		previouslocation = location
+		let deltaLocation = location.x - previousLocation.x
+		previousLocation = location
 
 		if lowerThumbLayer.highlighted {
 			updateLowerValue(deltaLocation)
