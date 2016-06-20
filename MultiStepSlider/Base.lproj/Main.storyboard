@@ -54,6 +54,9 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
                                         <real key="value" value="100"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="size" keyPath="thumbSize">
+                                        <size key="value" width="30" height="30"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="handleSliderChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="oqd-Wo-5j7"/>

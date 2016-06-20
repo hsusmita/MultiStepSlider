@@ -200,13 +200,7 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
-	@IBInspectable var thumbWidth: CGFloat = 5.0 {
-		didSet {
-			updateLayerFrames()
-		}
-	}
-
-	@IBInspectable var thumbHeight: CGFloat = 5.0 {
+	@IBInspectable var thumbSize: CGSize = CGSize(width: 10.0, height: 10.0) {
 		didSet {
 			updateLayerFrames()
 		}
@@ -279,7 +273,8 @@ public class MultiStepRangeSlider: UIControl {
 	public func setupRange(lower:Float , upper: Float) {
 		discreteLowerValue = lower
 		discreteUpperValue = upper
-		trackLayer.frame = CGRectMake(thumbWidth/2, (bounds.size.height - trackLayerHeight)/2, bounds.size.width - thumbWidth, trackLayerHeight)
+		trackLayer.frame = CGRectMake(thumbSize.width/2, (bounds.size.height - trackLayerHeight)/2,
+		bounds.size.width - thumbSize.width, trackLayerHeight)
 		lowerCenter = positionForNodeValue(discreteLowerValue) ?? CGRectGetMinX(trackLayer.frame)
 		upperCenter = positionForNodeValue(discreteUpperValue) ?? CGRectGetMaxX(trackLayer.frame)
 		updateLayerFrames()
@@ -287,7 +282,8 @@ public class MultiStepRangeSlider: UIControl {
 
 	override public func layoutSubviews() {
 		super.layoutSubviews()
-		trackFrame = CGRectMake(thumbWidth/2, (bounds.size.height - trackLayerHeight)/2, bounds.size.width - thumbWidth, trackLayerHeight)
+		trackFrame = CGRectMake(thumbSize.width/2, (bounds.size.height - trackLayerHeight)/2,
+		bounds.size.width - thumbSize.width, trackLayerHeight)
 	}
 
 	// MARK: - Private methods
@@ -307,13 +303,15 @@ public class MultiStepRangeSlider: UIControl {
 		CATransaction.begin()
 		CATransaction.setDisableActions(true)
 
-		trackLayer.highlightedPath = Path(origin: lowerCenter - thumbWidth/2,length: upperCenter - lowerCenter)
+		trackLayer.highlightedPath = Path(origin: lowerCenter - thumbSize.width/2,length: upperCenter - lowerCenter)
 		trackLayer.setNeedsDisplay()
 
-		lowerThumbLayer.frame = CGRect(x: lowerCenter - thumbWidth/2, y: (bounds.size.height - thumbHeight)/2, width: thumbWidth, height: thumbHeight)
+		lowerThumbLayer.frame = CGRect(x: lowerCenter - thumbSize.width/2, y: (bounds.size.height - thumbSize.height)/2,
+		width: thumbSize.width, height: thumbSize.height)
 		lowerThumbLayer.setNeedsDisplay()
 
-		upperThumbLayer.frame = CGRect(x: upperCenter - thumbWidth/2, y: (bounds.size.height - thumbHeight)/2, width: thumbWidth, height: thumbHeight)
+		upperThumbLayer.frame = CGRect(x: upperCenter - thumbSize.width/2, y: (bounds.size.height - thumbSize.height)/2,
+		width: thumbSize.width, height: thumbSize.height)
 		upperThumbLayer.setNeedsDisplay()
 
 		CATransaction.commit()
@@ -397,7 +395,7 @@ public class MultiStepRangeSlider: UIControl {
 	}
 
 	private func updateUpperValue(offset: CGFloat) {
-		upperCenter = boundValue(upperCenter + offset, toLowerValue: CGRectGetMidX(lowerThumbLayer.frame) + thumbWidth,
+		upperCenter = boundValue(upperCenter + offset, toLowerValue: CGRectGetMidX(lowerThumbLayer.frame) + thumbSize.width,
 		                         upperValue: CGRectGetMaxX(trackLayer.frame))
 		if let nodeValue = nodeValueForPosition(upperCenter) {
 			discreteUpperValue = nodeValue
@@ -409,7 +407,7 @@ public class MultiStepRangeSlider: UIControl {
 
 	private func updateLowerValue(offset: CGFloat) {
 		lowerCenter = boundValue(lowerCenter + offset, toLowerValue: CGRectGetMinX(trackLayer.frame),
-		                         upperValue:  CGRectGetMidX(upperThumbLayer.frame) - thumbWidth)
+		                         upperValue:  CGRectGetMidX(upperThumbLayer.frame) - thumbSize.width)
 		if let nodeValue = nodeValueForPosition(lowerCenter) {
 			discreteLowerValue = nodeValue
 		}
