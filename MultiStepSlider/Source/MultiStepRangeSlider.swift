@@ -246,7 +246,7 @@ public class MultiStepRangeSlider: UIControl {
 		if nodesList.count > 0 {
 			if let rangeValue = preSelectedRange {
 				guard let _ = positionForNodeValue(rangeValue.lower), _ = positionForNodeValue(rangeValue.upper) else {
-					print("Range contains invalid node")
+					print("Warning: Range contains invalid node")
 					return
 				}
 				discreteCurrentValue = rangeValue
