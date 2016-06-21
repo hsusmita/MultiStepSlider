@@ -1,3 +1,7 @@
+[![Version](https://img.shields.io/badge/pod-1.2-green.svg)](https://cocoapods.org/pods/MultiStepSlider)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://cocoadocs.org/docsets/MultiStepSlider)
+[![Documents](https://img.shields.io/badge/platform-iOS-orange.svg?style=flat)](http://cocoadocs.org/docsets/MultiStepSlider)
+
 # MultiStepSlider
 
 A custom UIControl which functions like UISlider where you can set multiple intervals with different step values for each interval. This is useful when an interval spans over large values, for example, price of real estates. In that case it is convenient to divide the large interval in smaller intervals with each interval having its own step value.
@@ -6,7 +10,7 @@ A custom UIControl which functions like UISlider where you can set multiple inte
 
 Add following lines in your pod file  
 ```
-pod ‘MultiStepSlider’, '~> 1.1'
+pod ‘MultiStepSlider’, '~> 1.2'
 ```
 #Usage
 
