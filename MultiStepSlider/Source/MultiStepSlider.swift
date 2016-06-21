@@ -1,5 +1,5 @@
 //
-//  MultiStepRangeSlider.swift
+//  MultiStepSlider.swift
 //  MultiStepSlider
 //
 //  Created by Susmita Horrow on 11/01/16.

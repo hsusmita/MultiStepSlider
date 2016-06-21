@@ -1,6 +1,6 @@
 Pod:: Spec.new do |spec|
   spec.platform     = 'ios', '8.0'
-  spec.name         = 'MultiStepSlider'
+  spec.name         = 'MultiStepRangeSlider'
   spec.version      = '1.1'
   spec.summary      = 'A custom UIControl which functions like UISlider where you can set multiple intervals with different step values for each interval.'
 spec.author = {
