@@ -28,7 +28,7 @@ class ViewController: UIViewController {
 	@IBAction func handleSliderChange(sender: AnyObject) {
 		minimumLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.lower)) as String
 		maximimLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.upper)) as String
-		print("lower = \(slider.continuousCurrentValues.lower) higher = \(slider.continuousCurrentValues.upper)")
+		print("lower = \(slider.continuousCurrentValue.lower) higher = \(slider.continuousCurrentValue.upper)")
 	}
 }
 

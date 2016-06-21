@@ -40,9 +40,12 @@ public struct RangeValue {
 }
 
 class RangeSliderTrackLayer: CALayer {
+	static let defaultHighlightTintColor = UIColor(red: 0, green: 122/255.0, blue: 255.0/255.0, alpha: 1.0)
+	static let defaultTintColor = UIColor.lightGrayColor()
+
 	var highlightedPath = Path(origin: 0, length: 0)
-	var highlightTintColor = UIColor.blueColor()
-	var tintColor = UIColor.grayColor()
+	var highlightTintColor: UIColor?
+	var tintColor: UIColor?
 	var curvaceousness: CGFloat = 2.0
 
 	override func drawInContext(ctx: CGContext) {
@@ -52,25 +55,26 @@ class RangeSliderTrackLayer: CALayer {
 		CGContextAddPath(ctx, path.CGPath)
 
 		// Fill the track
-		CGContextSetFillColorWithColor(ctx, tintColor.CGColor)
+		CGContextSetFillColorWithColor(ctx, (tintColor ?? RangeSliderTrackLayer.defaultTintColor).CGColor)
 		CGContextAddPath(ctx, path.CGPath)
 		CGContextFillPath(ctx)
 
 		// Fill the highlighted range
-		CGContextSetFillColorWithColor(ctx, highlightTintColor.CGColor)
+		CGContextSetFillColorWithColor(ctx, (highlightTintColor ?? RangeSliderTrackLayer.defaultHighlightTintColor).CGColor)
 		let rect = CGRect(x: highlightedPath.origin, y: 0.0, width: highlightedPath.length, height: bounds.height)
 		CGContextFillRect(ctx, rect)
 	}
 }
 
 class RangeSliderThumbLayer: CALayer {
+	static let defaultTintColor = UIColor(red: 0, green: 122/255.0, blue: 255.0/255.0, alpha: 1.0)
 	var highlighted: Bool = false {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
 	var curvaceousness: CGFloat = 2.0
-	var tintColor = UIColor.grayColor()
+	var tintColor = defaultTintColor
 
 	override func drawInContext(ctx: CGContext) {
 		let thumbFrame = bounds.insetBy(dx: 2.0, dy: 2.0)
@@ -111,16 +115,31 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
-	@IBInspectable var trackTintColor: UIColor = UIColor(white: 0.9, alpha: 1.0) {
+	@IBInspectable var trackTintColor: UIColor = RangeSliderTrackLayer.defaultTintColor {
 		didSet {
 			trackLayer.tintColor = trackTintColor
 			trackLayer.setNeedsDisplay()
 		}
 	}
 
-	@IBInspectable var trackHighlightTintColor: UIColor = UIColor(red: 0.0, green: 0.45, blue: 0.94, alpha: 1.0) {
+	@IBInspectable var trackHighlightTintColor: UIColor = RangeSliderTrackLayer.defaultHighlightTintColor {
 		didSet {
 			trackLayer.highlightTintColor = trackHighlightTintColor
+			trackLayer.setNeedsDisplay()
+		}
+	}
+
+
+	@IBInspectable var trackCurvaceousness: CGFloat = 1.0 {
+		didSet {
+			if trackCurvaceousness < 0.0 {
+				trackCurvaceousness = 0.0
+			}
+
+			if trackCurvaceousness > 1.0 {
+				trackCurvaceousness = 1.0
+			}
+			trackLayer.curvaceousness = trackCurvaceousness
 			trackLayer.setNeedsDisplay()
 		}
 	}
@@ -140,19 +159,17 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
-	@IBInspectable var curvaceousness: CGFloat = 1.0 {
+	@IBInspectable var thumbCurvaceousness: CGFloat = 1.0 {
 		didSet {
-			if curvaceousness < 0.0 {
-				curvaceousness = 0.0
+			if thumbCurvaceousness < 0.0 {
+				thumbCurvaceousness = 0.0
 			}
 
-			if curvaceousness > 1.0 {
-				curvaceousness = 1.0
+			if thumbCurvaceousness > 1.0 {
+				thumbCurvaceousness = 1.0
 			}
-			trackLayer.curvaceousness = curvaceousness
-			lowerThumbLayer.curvaceousness = curvaceousness
-			upperThumbLayer.curvaceousness = curvaceousness
-			trackLayer.setNeedsDisplay()
+			lowerThumbLayer.curvaceousness = thumbCurvaceousness
+			upperThumbLayer.curvaceousness = thumbCurvaceousness
 			lowerThumbLayer.setNeedsDisplay()
 			upperThumbLayer.setNeedsDisplay()
 		}
@@ -175,7 +192,7 @@ public class MultiStepRangeSlider: UIControl {
 			updateLayerFrames()
 		}
 	}
-	var continuousCurrentValues: RangeValue {
+	var continuousCurrentValue: RangeValue {
 		return RangeValue(lower: lowerValue, upper: upperValue)
 	}
 
