@@ -14,6 +14,15 @@ struct Path {
 	var length: CGFloat = 0
 }
 
+/**
+	The struct to encapsulate the information of interval.
+	
+	Initialization:
+	```
+	Interval(min: 50000, max: 100000, stepValue: 10000)
+	```
+*/
+
 public struct Interval {
 	var min: Float = 0.0
 	var max: Float = 1.0
@@ -105,6 +114,14 @@ class RangeSliderThumbLayer: CALayer {
 @IBDesignable
 public class MultiStepRangeSlider: UIControl {
 
+	// MARK: - Public variables
+
+	/**
+		The height of track.
+		
+		The track is the horizontal line on which the thumbs slide
+	*/
+
 	@IBInspectable var trackLayerHeight: CGFloat = 1.0 {
 		didSet {
 			var trackFrame = trackLayer.frame
@@ -115,12 +132,24 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
+	/**
+		The color used to tint the part of the track which is outside the range of lowerValue and upperValue.
+		
+		The default color is lightGrayColor.
+	*/
+
 	@IBInspectable var trackTintColor: UIColor = RangeSliderTrackLayer.defaultTintColor {
 		didSet {
 			trackLayer.tintColor = trackTintColor
 			trackLayer.setNeedsDisplay()
 		}
 	}
+
+	/**
+		The color used to tint the part of the track which is inside the range of lowerValue and upperValue.
+
+		The default color is #007AFF (rgba = 0, 122, 255, 1)
+	*/
 
 	@IBInspectable var trackHighlightTintColor: UIColor = RangeSliderTrackLayer.defaultHighlightTintColor {
 		didSet {
@@ -129,6 +158,11 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
+	/**
+		This property is used to control the curvature of ends of the track. 
+		
+		The property can have value from 0 to 1.
+	*/
 
 	@IBInspectable var trackCurvaceousness: CGFloat = 1.0 {
 		didSet {
@@ -144,11 +178,24 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
+	/**
+		The size of thumb.
+		
+		The thumbs mark the lower and upper end of the selected range on the slider
+	*/
+
 	@IBInspectable var thumbSize: CGSize = CGSize(width: 10.0, height: 10.0) {
 		didSet {
 			updateLayerFrames()
 		}
 	}
+
+	/**
+		The color used as tint color for the thumbs
+
+		The thumbs mark the lower and upper end of the selected range on the slider
+		The default color is #007AFF (rgba = 0, 122, 255, 1)
+	*/
 
 	@IBInspectable var thumbTintColor: UIColor = UIColor.whiteColor() {
 		didSet {
@@ -158,6 +205,12 @@ public class MultiStepRangeSlider: UIControl {
 			upperThumbLayer.setNeedsDisplay()
 		}
 	}
+
+	/**
+		This property is used to control the curvature of the thumbs. 
+
+		The property can have value from 0 to 1.
+	*/
 
 	@IBInspectable var thumbCurvaceousness: CGFloat = 1.0 {
 		didSet {
@@ -175,6 +228,10 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
+	/**
+		Setting this propery adds shadow to both of the thumbs.
+	*/
+
 	@IBInspectable var shadowEnabled: Bool = true {
 		didSet {
 			if shadowEnabled {
@@ -187,22 +244,35 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
+	/**
+		This represents the discrete upper and lower values.
+	*/
+
 	var discreteCurrentValue: RangeValue = RangeValue(lower: 0, upper: 1) {
 		didSet {
 			updateLayerFrames()
 		}
 	}
+
+	/**
+		This gives the continuous upper and lower values.
+	*/
+
 	var continuousCurrentValue: RangeValue {
 		return RangeValue(lower: lowerValue, upper: upperValue)
 	}
 
+	// MARK: - Private variables
+
+	private var intervals: [Interval] = []
+	private var preSelectedRange: RangeValue?
+	private var nodesList = [Float]()
 	private var previousLocation = CGPoint()
 	private let trackLayer = RangeSliderTrackLayer()
 	private let lowerThumbLayer = RangeSliderThumbLayer()
 	private let upperThumbLayer = RangeSliderThumbLayer()
-	private var intervals: [Interval] = []
-	private var preSelectedRange: RangeValue?
-	private var nodesList = [Float]()
+	private var lowerCenter: CGFloat = 0.0
+	private var upperCenter: CGFloat = 0.0
 	private var lowerValue: Float = 0.0 {
 		didSet {
 			updateLayerFrames()
@@ -226,8 +296,8 @@ public class MultiStepRangeSlider: UIControl {
 			updateLayerFrames()
 		}
 	}
-	private var lowerCenter: CGFloat = 0.0
-	private var upperCenter: CGFloat = 0.0
+
+	// MARK: - Life cycle
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -238,6 +308,25 @@ public class MultiStepRangeSlider: UIControl {
 		super.init(coder: coder)
 		initializeLayers()
 	}
+
+	override public func layoutSubviews() {
+		super.layoutSubviews()
+		trackFrame = CGRectMake(thumbSize.width/2, (bounds.size.height - trackLayerHeight)/2,
+		                        bounds.size.width - thumbSize.width, trackLayerHeight)
+	}
+
+	// MARK: - Public methods
+
+	/**
+		The method configures the required variables
+
+		- parameter intervals: The array intervals into which the slider is divided.
+			 preSelectedRange: This dictates the initial positions for lower and upper thumb.
+							   The lower and upper of RangeValue should lie within the interval specified and should be a valid node value.
+					For example, if the there is an interval Interval(min: 50000, max: 100000, stepValue: 10000),
+					then 60000 will be a valid node, but not 65000. In that case, a warning will be shown.
+
+	*/
 
 	public func configureSlider(intervals intervals: [Interval], preSelectedRange: RangeValue?) {
 		self.intervals = intervals
@@ -253,19 +342,16 @@ public class MultiStepRangeSlider: UIControl {
 			} else {
 				discreteCurrentValue = RangeValue(lower: Float(nodesList[0]), upper: Float(nodesList[nodesList.count-1]))
 			}
+			lowerValue = discreteCurrentValue.lower
+			upperValue = discreteCurrentValue.upper
 			lowerCenter = positionForNodeValue(discreteCurrentValue.lower) ?? CGRectGetMinX(trackFrame)
 			upperCenter = positionForNodeValue(discreteCurrentValue.upper) ?? CGRectGetMaxX(trackFrame)
 		}
 		updateLayerFrames()
 	}
 
-	override public func layoutSubviews() {
-		super.layoutSubviews()
-		trackFrame = CGRectMake(thumbSize.width/2, (bounds.size.height - trackLayerHeight)/2,
-		bounds.size.width - thumbSize.width, trackLayerHeight)
-	}
-
 	// MARK: - Private methods
+	// MARK: - Drawing
 
 	private func initializeLayers() {
 		trackLayer.contentsScale = UIScreen.mainScreen().scale
@@ -296,71 +382,6 @@ public class MultiStepRangeSlider: UIControl {
 		CATransaction.commit()
 	}
 
-	private func positionForNodeValue(value: Float)-> CGFloat? {
-		let scale = Float(trackLayer.frame.size.width) / (Float(nodesList.count))
-		var nodeNumber = -1
-		for i in 0..<nodesList.count {
-			if value == nodesList[i] {
-				nodeNumber = i
-			}
-		}
-		if nodeNumber >= 0 && nodeNumber < nodesList.count {
-			let scaledPosition = scale * Float(nodeNumber)
-			if nodeNumber == nodesList.count - 1 {
-				return CGRectGetMaxX(trackLayer.frame)
-			}else if nodeNumber == 0 {
-				return CGRectGetMinX(trackLayer.frame)
-			}else {
-				return CGFloat(scaledPosition + Float(CGRectGetMinX(trackLayer.frame)) + scale/2)
-			}
-		}else {
-			return nil
-		}
-	}
-
-	private func nodeValueForPosition(position: CGFloat)-> Float? {
-		let scale = trackLayer.frame.size.width / CGFloat(nodesList.count)
-		let scaledPosition = position - CGRectGetMinX(trackLayer.frame)
-		let nodeNumber = Int(floor(scaledPosition / scale))
-		if nodeNumber < nodesList.count && nodeNumber >= 0 {
-			return nodesList[nodeNumber]
-		}else {
-			return nil
-		}
-	}
-
-	private func actualValueForPosition(position: CGFloat)-> Float? {
-		let scale = trackLayer.frame.size.width / CGFloat(nodesList.count)
-		let scaledPosition = position - CGRectGetMinX(trackLayer.frame)
-		let nodeNumber = Int(floor(scaledPosition / scale))
-		if nodeNumber < nodesList.count - 1 && nodeNumber >= 0 {
-			let nextNode = nodeNumber + 1
-			let valueDifference = nodesList[nextNode] - nodesList[nodeNumber]
-			let lower = CGFloat(nodeNumber) * scale
-			let value = Float(scaledPosition - lower) * valueDifference / Float(scale)
-			return nodesList[nodeNumber] + value
-		} else {
-			return nil
-		}
-	}
-
-	private func updateNodesList() {
-		nodesList.removeAll()
-		for interval in intervals {
-			nodesList += interval.generateNodes()
-		}
-		nodesList.uniqueInPlace()
-	}
-
-	private var numberOfNodes: Int {
-		var nodeCount = 0
-		for interval in intervals {
-			nodeCount += Int((interval.max - interval.min) / interval.stepValue)
-		}
-		nodeCount -= intervals.count - 1
-		return nodeCount
-	}
-
 	private func addShadow(layer: CALayer) {
 		layer.shadowColor = UIColor.blackColor().CGColor
 		layer.shadowOffset = CGSizeMake(0.0, 2.0)
@@ -373,8 +394,105 @@ public class MultiStepRangeSlider: UIControl {
 		layer.shadowOpacity = 0.0
 	}
 
+	// MARK: - Calculations
+
+	private func updateNodesList() {
+
+	/**
+		The method generates node based on the intervals given.
+	*/
+		nodesList.removeAll()
+		for interval in intervals {
+			nodesList += interval.generateNodes()
+		}
+		nodesList.uniqueInPlace()
+	}
+
+	/**
+		The track is divided into number of nodes. Each node is assigned one value. 
+		
+		This method returns x-cordinate of node corresponding to the given value
+
+		- parameter value: The node value for which x-cordinate to be calculated
+
+		- returns:
+			x-cordinate of the node for the given value if such node exist, else returns nil
+
+	*/
+
+	private func positionForNodeValue(value: Float)-> CGFloat? {
+		let scale = Float(trackLayer.frame.size.width) / (Float(nodesList.count))
+		var nodeNumber = -1
+		for i in 0..<nodesList.count {
+			if value == nodesList[i] {
+				nodeNumber = i
+			}
+		}
+		guard nodeNumber >= 0 && nodeNumber < nodesList.count else {
+			return nil
+		}
+		let scaledPosition = scale * Float(nodeNumber)
+		if nodeNumber == nodesList.count - 1 {
+			return CGRectGetMaxX(trackLayer.frame)
+		}else if nodeNumber == 0 {
+			return CGRectGetMinX(trackLayer.frame)
+		}else {
+			return CGFloat(scaledPosition + Float(CGRectGetMinX(trackLayer.frame)) + scale/2)
+		}
+	}
+
+	/**
+		The track is divided into number of nodes. Each node is assigned one value. 
+		
+		This method fetches the node nearest to the given thumb position and returns the value assinged to the node.
+
+		- parameter position: The thumb position for which node value to be calculated
+
+		- returns: 
+			The value assinged to the node if any valid node exists at the given position, else it returns nil.
+	*/
+
+	private func nodeValueForPosition(position: CGFloat)-> Float? {
+		let scale = trackLayer.frame.size.width / CGFloat(nodesList.count)
+		let scaledPosition = position - CGRectGetMinX(trackLayer.frame)
+		let nodeNumber = Int(floor(scaledPosition / scale))
+		guard nodeNumber < nodesList.count && nodeNumber >= 0 else {
+			return nil
+		}
+		return nodesList[nodeNumber]
+	}
+
+	/**
+		This method returns the actual value corresponding to the thumb position
+
+		- parameter position: The position for which value to be calculated
+
+		- returns:
+			The actual value corresponding to the thumb position if the position is valid, else it returns nil.
+	*/
+
+	private func actualValueForPosition(position: CGFloat)-> Float? {
+		let scale = trackLayer.frame.size.width / CGFloat(nodesList.count)
+		let scaledPosition = position - CGRectGetMinX(trackLayer.frame)
+		let nodeNumber = Int(floor(scaledPosition / scale))
+		guard nodeNumber < nodesList.count - 1 && nodeNumber >= 0 else {
+			return nil
+		}
+		let nextNode = nodeNumber + 1
+		let valueDifference = nodesList[nextNode] - nodesList[nodeNumber]
+		let lower = CGFloat(nodeNumber) * scale
+		let value = Float(scaledPosition - lower) * valueDifference / Float(scale)
+		return nodesList[nodeNumber] + value
+	}
+
+	/**
+		This method updates upperCenter(the center of upper thumb), upperValue and upper property of discreteCurrentValue
+
+		- Parameter offset : The distance moved by upper thumb with respect to last location
+
+	*/
 	private func updateUpperValue(offset: CGFloat) {
-		upperCenter = boundValue(upperCenter + offset, toLowerValue: CGRectGetMidX(lowerThumbLayer.frame) + thumbSize.width,
+		upperCenter = boundValue(upperCenter + offset, lowerValue: CGRectGetMidX(lowerThumbLayer.frame) + thumbSize.width,
 		                         upperValue: CGRectGetMaxX(trackLayer.frame))
 		if let nodeValue = nodeValueForPosition(upperCenter) {
 			discreteCurrentValue.upper = nodeValue
@@ -384,8 +502,14 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
+	/**
+		This method updates lowerCenter(the center of lower thumb), lowerValue and upper property of discreteCurrentValue
+
+		- Parameter offset : The distance moved by lower thumb with respect to last location
+	*/
+
 	private func updateLowerValue(offset: CGFloat) {
-		lowerCenter = boundValue(lowerCenter + offset, toLowerValue: CGRectGetMinX(trackLayer.frame),
+		lowerCenter = boundValue(lowerCenter + offset,lowerValue: CGRectGetMinX(trackLayer.frame),
 		                         upperValue:  CGRectGetMidX(upperThumbLayer.frame) - thumbSize.width)
 		if let nodeValue = nodeValueForPosition(lowerCenter) {
 			discreteCurrentValue.lower = nodeValue
@@ -395,7 +519,23 @@ public class MultiStepRangeSlider: UIControl {
 		}
 	}
 
-	private func boundValue(value: CGFloat, toLowerValue lowerValue: CGFloat, upperValue: CGFloat) -> CGFloat {
+	/**
+		This method makes sure the given value lies between given upper and lower limit.
+
+		- Parameter value: The value to be checked
+					lowerValue: The lower limit
+					upperValue: The upper limit
+
+					
+		- returns 
+		  The given value if it lies within the range
+
+		  The lowerValue if the given value is less than the lowerValue
+
+		  The upperValue if the given value is greater than the upperValue
+	*/
+
+	private func boundValue(value: CGFloat, lowerValue: CGFloat, upperValue: CGFloat) -> CGFloat {
 		return min(max(value, lowerValue), upperValue)
 	}
 
