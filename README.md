@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/pod-1.2-green.svg)](https://cocoapods.org/pods/MultiStepSlider)
+[![Version](https://img.shields.io/badge/pod-1.3-green.svg)](https://cocoapods.org/pods/MultiStepSlider)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://cocoadocs.org/docsets/MultiStepSlider)
 [![Documents](https://img.shields.io/badge/platform-iOS-orange.svg?style=flat)](http://cocoadocs.org/docsets/MultiStepSlider)
 
@@ -10,7 +10,7 @@ A custom UIControl which functions like UISlider where you can set multiple inte
 
 Add following lines in your pod file  
 ```
-pod ‘MultiStepSlider’, '~> 1.2'
+pod ‘MultiStepSlider’, '~> 1.3'
 ```
 #Usage
 
