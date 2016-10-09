@@ -122,7 +122,7 @@ public class MultiStepRangeSlider: UIControl {
 		The track is the horizontal line on which the thumbs slide
 	*/
 
-	@IBInspectable var trackLayerHeight: CGFloat = 1.0 {
+	@IBInspectable public var trackLayerHeight: CGFloat = 1.0 {
 		didSet {
 			var trackFrame = trackLayer.frame
 			trackFrame.origin.y = (bounds.size.height - trackLayerHeight)/2
@@ -138,7 +138,7 @@ public class MultiStepRangeSlider: UIControl {
 		The default color is lightGrayColor.
 	*/
 
-	@IBInspectable var trackTintColor: UIColor = RangeSliderTrackLayer.defaultTintColor {
+	@IBInspectable public var trackTintColor: UIColor = RangeSliderTrackLayer.defaultTintColor {
 		didSet {
 			trackLayer.tintColor = trackTintColor
 			trackLayer.setNeedsDisplay()
@@ -151,7 +151,7 @@ public class MultiStepRangeSlider: UIControl {
 		The default color is #007AFF (rgba = 0, 122, 255, 1)
 	*/
 
-	@IBInspectable var trackHighlightTintColor: UIColor = RangeSliderTrackLayer.defaultHighlightTintColor {
+	@IBInspectable public var trackHighlightTintColor: UIColor = RangeSliderTrackLayer.defaultHighlightTintColor {
 		didSet {
 			trackLayer.highlightTintColor = trackHighlightTintColor
 			trackLayer.setNeedsDisplay()
@@ -164,7 +164,7 @@ public class MultiStepRangeSlider: UIControl {
 		The property can have value from 0 to 1.
 	*/
 
-	@IBInspectable var trackCurvaceousness: CGFloat = 1.0 {
+	@IBInspectable public var trackCurvaceousness: CGFloat = 1.0 {
 		didSet {
 			if trackCurvaceousness < 0.0 {
 				trackCurvaceousness = 0.0
@@ -184,7 +184,7 @@ public class MultiStepRangeSlider: UIControl {
 		The thumbs mark the lower and upper end of the selected range on the slider
 	*/
 
-	@IBInspectable var thumbSize: CGSize = CGSize(width: 10.0, height: 10.0) {
+	@IBInspectable public var thumbSize: CGSize = CGSize(width: 10.0, height: 10.0) {
 		didSet {
 			updateLayerFrames()
 		}
@@ -197,7 +197,7 @@ public class MultiStepRangeSlider: UIControl {
 		The default color is #007AFF (rgba = 0, 122, 255, 1)
 	*/
 
-	@IBInspectable var thumbTintColor: UIColor = UIColor.whiteColor() {
+	@IBInspectable public var thumbTintColor: UIColor = UIColor.whiteColor() {
 		didSet {
 			lowerThumbLayer.tintColor = thumbTintColor
 			upperThumbLayer.tintColor = thumbTintColor
@@ -212,7 +212,7 @@ public class MultiStepRangeSlider: UIControl {
 		The property can have value from 0 to 1.
 	*/
 
-	@IBInspectable var thumbCurvaceousness: CGFloat = 1.0 {
+	@IBInspectable public var thumbCurvaceousness: CGFloat = 1.0 {
 		didSet {
 			if thumbCurvaceousness < 0.0 {
 				thumbCurvaceousness = 0.0
@@ -232,7 +232,7 @@ public class MultiStepRangeSlider: UIControl {
 		Setting this propery adds shadow to both of the thumbs.
 	*/
 
-	@IBInspectable var shadowEnabled: Bool = true {
+	@IBInspectable public var shadowEnabled: Bool = true {
 		didSet {
 			if shadowEnabled {
 				addShadow(lowerThumbLayer)
