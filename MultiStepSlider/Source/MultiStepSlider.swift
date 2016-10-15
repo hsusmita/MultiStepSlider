@@ -24,15 +24,15 @@ struct Path {
 */
 
 public struct Interval {
-	var min: Float = 0.0
-	var max: Float = 1.0
-	var stepValue: Float = 1.0
+	public var min: Float = 0.0
+	public var max: Float = 1.0
+	public var stepValue: Float = 1.0
 
-	func nodeCount() -> Int {
+	public func nodeCount() -> Int {
 		return Int((max - min) / stepValue) - 1
 	}
 
-	func generateNodes() -> [Float] {
+	public func generateNodes() -> [Float] {
 		var nodes = [Float]()
 		var index = min
 		while index <= max {
@@ -44,8 +44,8 @@ public struct Interval {
 }
 
 public struct RangeValue {
-	var lower: Float = 0.0
-	var upper: Float = 0.0
+	public var lower: Float = 0.0
+	public var upper: Float = 0.0
 }
 
 class RangeSliderTrackLayer: CALayer {
@@ -248,7 +248,7 @@ open class MultiStepRangeSlider: UIControl {
 		This represents the discrete upper and lower values.
 	*/
 
-	var discreteCurrentValue: RangeValue = RangeValue(lower: 0, upper: 1) {
+	public var discreteCurrentValue: RangeValue = RangeValue(lower: 0, upper: 1) {
 		didSet {
 			updateLayerFrames()
 		}
@@ -258,7 +258,7 @@ open class MultiStepRangeSlider: UIControl {
 		This gives the continuous upper and lower values.
 	*/
 
-	var continuousCurrentValue: RangeValue {
+	public var continuousCurrentValue: RangeValue {
 		return RangeValue(lower: lowerValue, upper: upperValue)
 	}
 
