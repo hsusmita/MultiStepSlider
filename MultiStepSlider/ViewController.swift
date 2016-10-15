@@ -13,7 +13,7 @@ class ViewController: UIViewController {
 	@IBOutlet weak var minimumLabel: UILabel!
 	@IBOutlet weak var maximimLabel: UILabel!
 	@IBOutlet weak var slider: MultiStepRangeSlider!
-	let numberFomatter = NSNumberFormatter()
+	let numberFomatter = NumberFormatter()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -22,20 +22,20 @@ class ViewController: UIViewController {
 						Interval(min: 1000000, max: 3000000, stepValue: 500000)]
 		let preSelectedRange = RangeValue(lower: 80000, upper: 500000)
 		slider.configureSlider(intervals: intervals, preSelectedRange: preSelectedRange)
-		minimumLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.lower)) as String
-		maximimLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.upper)) as String
+		minimumLabel.text = abbreviateNumber(NSNumber(value: slider.discreteCurrentValue.lower as Float)) as String
+		maximimLabel.text = abbreviateNumber(NSNumber(value: slider.discreteCurrentValue.upper as Float)) as String
 	}
 
-	@IBAction func handleSliderChange(sender: AnyObject) {
-		minimumLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.lower)) as String
-		maximimLabel.text = abbreviateNumber(NSNumber(float: slider.discreteCurrentValue.upper)) as String
+	@IBAction func handleSliderChange(_ sender: AnyObject) {
+		minimumLabel.text = abbreviateNumber(NSNumber(value: slider.discreteCurrentValue.lower as Float)) as String
+		maximimLabel.text = abbreviateNumber(NSNumber(value: slider.discreteCurrentValue.upper as Float)) as String
 		print("lower = \(slider.continuousCurrentValue.lower) higher = \(slider.continuousCurrentValue.upper)")
 	}
 }
 
 //http://stackoverflow.com/questions/18267211/ios-convert-large-numbers-to-smaller-format
 
-func abbreviateNumber(num: NSNumber) -> NSString {
+func abbreviateNumber(_ num: NSNumber) -> NSString {
 	var ret: NSString = ""
 	let abbrve: [String] = ["K", "M", "B"]
 
@@ -58,17 +58,17 @@ func abbreviateNumber(num: NSNumber) -> NSString {
 	return ret
 }
 
-func floatToString(val: Float) -> NSString {
+func floatToString(_ val: Float) -> NSString {
 	var ret = NSString(format: "%.1f", val)
-	var c = ret.characterAtIndex(ret.length - 1)
+	var c = ret.character(at: ret.length - 1)
 
 	while c == 48 {
-		ret = ret.substringToIndex(ret.length - 1)
-		c = ret.characterAtIndex(ret.length - 1)
+		ret = ret.substring(to: ret.length - 1) as NSString
+		c = ret.character(at: ret.length - 1)
 
 
 		if (c == 46) {
-			ret = ret.substringToIndex(ret.length - 1)
+			ret = ret.substring(to: ret.length - 1) as NSString
 		}
 	}
 	return ret
