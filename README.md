@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/pod-1.3-green.svg)](https://cocoapods.org/pods/MultiStepSlider)
+[![Version](https://img.shields.io/badge/pod-1.4-green.svg)](https://cocoapods.org/pods/MultiStepSlider)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://cocoadocs.org/docsets/MultiStepSlider)
 [![Documents](https://img.shields.io/badge/platform-iOS-orange.svg?style=flat)](http://cocoadocs.org/docsets/MultiStepSlider)
 
@@ -10,7 +10,7 @@ A custom UIControl which functions like UISlider where you can set multiple inte
 
 Add following lines in your pod file  
 ```
-pod ‘MultiStepSlider’, '~> 1.3'
+pod ‘MultiStepSlider’, '~> 1.4'
 ```
 #Usage
 
@@ -30,18 +30,18 @@ func configureSlider(intervals intervals: [Interval], preSelectedRange: RangeVal
 ```
 The first parameter is an array of type **Interval** which is defined as:
 ```
-public struct Interval {
-var min: Float = 0.0
-var max: Float = 1.0
-var stepValue: Float = 1.0
-}
+ public struct Interval {
+	public private(set) var min: Float = 0.0
+	public private(set) var max: Float = 0.0
+	public private(set) var stepValue: Float = 0.0
+ }
 ```
 The second parameter is of type **RangeValue** which is defined as:
 ```
-public struct RangeValue {
-var lower: Float = 0.0
-var upper: Float = 0.0
-}
+ public struct RangeValue {
+	public private(set) var lower: Float = 0.0
+	public private(set) var upper: Float = 0.0
+ }
 ```
 This dictates the initial positions for lower and upper thumb. The _lower_ and _upper_ of **RangeValue** should lie within the interval specified and should be a valid node value. For example, if the there is an interval
 **Interval(min: 50000, max: 100000, stepValue: 10000)**, then **60000** will be a valid node, but not **65000**. In that case, a warning will be shown.
