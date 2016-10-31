@@ -16,6 +16,7 @@
 		4E3D6B871C43C2310002DE23 /* MultiStepSliderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D6B861C43C2310002DE23 /* MultiStepSliderUITests.swift */; };
 		4E3D6B971C43C4CC0002DE23 /* MultiStepSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D6B961C43C4CC0002DE23 /* MultiStepSlider.swift */; };
 		4E3D6B9A1C43C5EF0002DE23 /* Array+Sorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D6B991C43C5EF0002DE23 /* Array+Sorting.swift */; };
+		78ED367D1DC759C80011E412 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ED367C1DC759C80011E412 /* Utility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		4E3D6B881C43C2310002DE23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4E3D6B961C43C4CC0002DE23 /* MultiStepSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultiStepSlider.swift; path = Source/MultiStepSlider.swift; sourceTree = "<group>"; };
 		4E3D6B991C43C5EF0002DE23 /* Array+Sorting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+Sorting.swift"; path = "Source/Array+Sorting.swift"; sourceTree = "<group>"; };
+		78ED367C1DC759C80011E412 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Utility.swift; path = Source/Utility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 			children = (
 				4E3D6B991C43C5EF0002DE23 /* Array+Sorting.swift */,
 				4E3D6B961C43C4CC0002DE23 /* MultiStepSlider.swift */,
+				78ED367C1DC759C80011E412 /* Utility.swift */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78ED367D1DC759C80011E412 /* Utility.swift in Sources */,
 				4E3D6B691C43C2310002DE23 /* ViewController.swift in Sources */,
 				4E3D6B671C43C2310002DE23 /* AppDelegate.swift in Sources */,
 				4E3D6B9A1C43C5EF0002DE23 /* Array+Sorting.swift in Sources */,
