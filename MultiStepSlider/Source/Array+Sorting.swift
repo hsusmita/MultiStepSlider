@@ -20,7 +20,7 @@ extension Array where Element: Equatable {
 		var index = 0
 		for element in self {
 			if seen.contains(element) {
-				removeAtIndex(index)
+				remove(at: index)
 			} else {
 				seen.append(element)
 				index += 1
