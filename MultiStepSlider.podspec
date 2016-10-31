@@ -1,7 +1,7 @@
 Pod:: Spec.new do |spec|
-  spec.platform     = 'ios', '8.0'
+  spec.platform     = 'ios', '9.0'
   spec.name         = 'MultiStepSlider'
-  spec.version      = '1.4'
+  spec.version      = '2.0'
   spec.summary      = 'A custom UIControl which functions like UISlider where you can set multiple intervals with different step values for each interval.'
 spec.author = {
     'Susmita Horrow' => 'susmita.horrow@gmail.com'
@@ -10,9 +10,9 @@ spec.author = {
   spec.homepage         = 'https://github.com/hsusmita/MultiStepSlider'
   spec.source = {
     :git => 'https://github.com/hsusmita/MultiStepSlider.git',
-    :tag => '1.4'
+    :tag => '2.0'
   }
-  spec.ios.deployment_target = '8.0'
+  spec.ios.deployment_target = '9.0'
   spec.source_files = 'MultiStepSlider/Source/*'
   spec.requires_arc = true
 end

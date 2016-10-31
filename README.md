@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/pod-1.4-green.svg)](https://cocoapods.org/pods/MultiStepSlider)
+[![Version](https://img.shields.io/badge/pod-2.0-green.svg)](https://cocoapods.org/pods/MultiStepSlider)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://cocoadocs.org/docsets/MultiStepSlider)
 [![Documents](https://img.shields.io/badge/platform-iOS-orange.svg?style=flat)](http://cocoadocs.org/docsets/MultiStepSlider)
 
@@ -8,7 +8,13 @@ A custom UIControl which functions like UISlider where you can set multiple inte
 
 #Installation
 
-Add following lines in your pod file  
+Add following lines in your pod file if you are using Swift 3
+```
+pod ‘MultiStepSlider’, '~> 2.0'
+
+```
+ 
+Add following lines in your pod file for previous Swift versions
 ```
 pod ‘MultiStepSlider’, '~> 1.4'
 ```
@@ -39,8 +45,8 @@ The first parameter is an array of type **Interval** which is defined as:
 The second parameter is of type **RangeValue** which is defined as:
 ```
  public struct RangeValue {
-	public private(set) var lower: Float = 0.0
-	public private(set) var upper: Float = 0.0
+	public var lower: Float = 0.0
+	public var upper: Float = 0.0
  }
 ```
 This dictates the initial positions for lower and upper thumb. The _lower_ and _upper_ of **RangeValue** should lie within the interval specified and should be a valid node value. For example, if the there is an interval

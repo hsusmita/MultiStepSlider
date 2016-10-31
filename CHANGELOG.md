@@ -1,3 +1,7 @@
+version 2.0
+
+* Update for Swift 3.
+
 version 1.4
 
 * Update access controls for variables. Now the properties `discreteCurrentValue`, `continuousCurrentValue`, and the properties of struct `Interval` and `Range` are accessible, but are read only.
